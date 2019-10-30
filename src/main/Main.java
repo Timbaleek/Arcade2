@@ -5,6 +5,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 
@@ -56,10 +57,12 @@ public class Main {
 	public static float transparency = 0.5f;
 	static final int numberOfWorlds = 1;
 	static World currentWorld; 
-	public static int currentWorldNumber = 0;
+	public static int currentWorldNumber = 1;
 	
 	static final float tileSize = 500;
 	static GraphicRect[][] backgroundTiles = new GraphicRect[(int)Math.ceil(screenWidth/tileSize)+1][(int)Math.ceil(screenHeight/tileSize)+1];
+	
+	public static final float gravity = 0.02f;
 	
 	static Camera camera;
 	public static Player player;
@@ -83,14 +86,14 @@ public class Main {
 	
 	private static void update() {
 		player.updateInput();
-		//player.vel.y += 0.1f;
+		//player.vel.y += gravity;
 		player.update();
 		currentWorld.update();
 		if(!(player.vel.x == 0 && player.vel.y == 0)) onPlayerMove();
 		//changeWorld(1);
 	}
 	
-	private static void onPlayerMove() {
+	private static void onPlayerMove() { // to reduce the calculations to only when the player moves
 		camera.pos.x = player.poly.pos.x-(screenWidth/2);
 		camera.pos.y = player.poly.pos.y-(screenHeight/2);
 		for(int i = 0; i < backgroundTiles.length; i++){
@@ -110,20 +113,32 @@ public class Main {
 	private static void render() {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-camera.pos.x, -camera.pos.y, 0);
-//		for(int i = 0; i < backgroundTiles.length; i++){
-//			for(int j = 0; j < backgroundTiles[i].length; j++){
-//				backgroundTiles[i][j].render();
-//			}
-//		}
-		
+		for(int i = 0; i < backgroundTiles.length; i++){
+			for(int j = 0; j < backgroundTiles[i].length; j++){
+				backgroundTiles[i][j].render();
+			}
+		}
 		currentWorld.render();
-		player.rect.render();
-		player.poly.render();
-		CollisionHandler.renderNormals(player.poly);
+		
 		new Line(new Vector2f(0,0), new Vector2f(0,1000)).render();
 		new Line(new Vector2f(0,0), new Vector2f(1000,0)).render();
 		
 		GL11.glPopMatrix();
+		GL11.glPushMatrix();
+		//GLU.gluLookAt(camera.pos.x, camera.pos.y, 0f, player.rect.pos.x, player.rect.pos.y,0f,0f,0f,1f);
+		//Vector2f oldPos = player.rect.pos;
+		//player.rect.pos.x = -player.rect.size.x/2; player.rect.pos.y = -player.rect.size.y/2;
+		//GL11.glRotatef(90f, 0, 0, 1);
+		//splayer.rect.pos=oldPos;
+		player.rect.renderAnim();
+		//player.poly.render();
+		//CollisionHandler.renderNormals(player.poly);
+		GL11.glPopMatrix();
 	}
+
+	public static long getMillis() {
+		return System.nanoTime()/1000000;
+	}
+
 }
 

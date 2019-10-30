@@ -39,6 +39,15 @@ public class Polygon {
 		}
 	}
 	
+	public void move(float moveX, float moveY){
+		pos.x += moveX;
+		pos.y += moveY;
+		for(Vector2f p:shape){
+			p.x += moveX;
+			p.y += moveY;
+		}
+	}
+	
 	public void savePolygon(String path, int polygonNumber){
 		try {
 			Writer wr = new FileWriter(path + polygonNumber +".txt");

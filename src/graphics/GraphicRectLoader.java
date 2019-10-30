@@ -15,6 +15,7 @@ public class GraphicRectLoader {
 	public static Texture initTex(String textureName){
 		Texture tex = null;
 		String path = "res/textures/"+textureName+".png";
+		System.out.println(textureName);
 		try {
 			tex = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
 			tex.setTextureFilter(GL11.GL_NEAREST);
@@ -34,14 +35,20 @@ public class GraphicRectLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		boolean firstLine = true;
 		//read line by line
 		while(scanner.hasNextLine()){
-		    //process each line
-		    String line = scanner.nextLine();
-		    String[]object = line.split(",");
-		    g = new GraphicRect(new Vector2f(Float.parseFloat(object[0]),Float.parseFloat(object[1])),
-		    					new Vector2f(Float.parseFloat(object[2]),Float.parseFloat(object[3])),
-		    					object[4]); //name
+			//process each line
+			String line = scanner.nextLine();
+			String[]object = line.split(",");
+			if(firstLine){
+				g = new GraphicRect(new Vector2f(Float.parseFloat(object[0]),Float.parseFloat(object[1])),
+						new Vector2f(Float.parseFloat(object[2]),Float.parseFloat(object[3])),
+						object[4], Integer.parseInt(object[5])); //name
+				firstLine = false;
+			} else {
+				g.addTexture(object[0], Integer.parseInt(object[1]));
+			}
 		}
 		return g;
 	}

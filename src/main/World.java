@@ -16,18 +16,20 @@ public class World {
 	}
 	
 	public void update(){
+
 		for (CollidingGameEntity c:collidingGameEntities){
 			c.update();
+			//CollisionHandler.resolveRectCollision(Main.player, c);
 //			CollisionHandler.resolveSATCollision(Main.player, c);
-			System.out.println((CollisionHandler.detectSATCollision(Main.player, c)));
+//			System.out.println((CollisionHandler.detectSATCollision(Main.player, c)));
 		}
 	}
 	
 	public void render(){
 		for (CollidingGameEntity c:collidingGameEntities){
-			c.rect.render();
-			c.poly.render();
-			CollisionHandler.renderNormals(c.poly);
+			c.rect.renderAnim();
+			//c.poly.render();
+			//CollisionHandler.renderNormals(c.poly);
 		}
 	}
 }

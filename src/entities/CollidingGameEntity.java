@@ -9,6 +9,7 @@ public class CollidingGameEntity {
 	public Vector2f vel = new Vector2f(0,0);
 	public Polygon poly;
 	public GraphicRect rect;
+	private final float maxSpeed = 3000;
 	
 	public CollidingGameEntity(Polygon poly, GraphicRect rect) {
 		this.poly = poly;
@@ -16,7 +17,6 @@ public class CollidingGameEntity {
 	}
 
 	public void update(){
-		//System.out.println(vel);
 		poly.move(vel);
 		rect.move(vel);
 		
@@ -25,10 +25,8 @@ public class CollidingGameEntity {
 		}else{
 			vel.x = 0;
 		}
-		if(vel.y > 0.01 || vel.y < -0.01){
-			vel.y /= 1.02f;
-		}else{
-			vel.y = 0;
-		}
+		
+		if(vel.x >= maxSpeed) vel.x = maxSpeed; else if(vel.x <= -maxSpeed) vel.x = -maxSpeed;
+		if(vel.y >= maxSpeed) vel.y = maxSpeed; else if(vel.y <= -maxSpeed) vel.y = -maxSpeed;
 	}
 }
