@@ -1,6 +1,7 @@
 package entities;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.util.vector.Vector2f;
 
 import graphics.GraphicRect;
 import main.Main;
@@ -11,7 +12,9 @@ public class Player extends CollidingGameEntity{
 	public float jumpForce = 5f;
 
 	public Player(Polygon polygon,GraphicRect graphicRect) {
-		super(polygon, graphicRect);
+		super(graphicRect);
+		//player only one polygon
+		polygons.add(polygon);
 	}
 
 	public void updateInput(){
@@ -23,7 +26,7 @@ public class Player extends CollidingGameEntity{
 			}
 			if ((Keyboard.isKeyDown(Keyboard.KEY_W))){
 
-				System.out.println(grounded);
+				//System.out.println(grounded);
 				if(grounded){
 					//Main.player.rect.changeTex(1, (long)(jumpForce/(Main.gravity)), false); // change to before jumping texture
 					vel.y = -jumpForce;
@@ -44,5 +47,11 @@ public class Player extends CollidingGameEntity{
 			Main.player.rect.changeTex(1, (long)(jumpForce/(Main.gravity)), false); // change to ascending texture
 		}
 		super.update();
+	}
+
+	public void respawn(Vector2f spawnpoint) {
+		vel = Main.nullVec;
+		polygons.get(0).pos = spawnpoint;
+		rect.pos = spawnpoint;
 	}
 }

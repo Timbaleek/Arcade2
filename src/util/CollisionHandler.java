@@ -4,7 +4,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import entities.CollidingGameEntity;
 import entities.Polygon;
-import graphics.GraphicRect;
 import graphics.Rect;
 import main.Main;
 
@@ -17,11 +16,11 @@ public class CollisionHandler {
 	public static Line currentLine = new Line(new Vector2f(0,0),new Vector2f(0,0));
 	public static Line currentNormal = new Line(new Vector2f(0,0),new Vector2f(0,0));
 	
-	public static Vector2f doSATCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-
+	public static Vector2f doSATCollision(Polygon movingE, Polygon staticE) {
+		
 		//!!!
-		CollidingGameEntity c2 = movingE;
-		CollidingGameEntity c1 = staticE;
+		Polygon c2 = movingE;
+		Polygon c1 = staticE;
 		float overlap = Float.MAX_VALUE;
 		
 		for (int poly = 0; poly < 2; poly++) { // checking one against the other
@@ -30,9 +29,9 @@ public class CollisionHandler {
 				c2 = movingE;
 				c1 = staticE;
 			}
-			for (int i = 0; i < c1.poly.shape.size(); i++) {
-				Vector2f a = c1.poly.shape.get(i);
-				Vector2f b = c1.poly.shape.get((i + 1) % c1.poly.shape.size());
+			for (int i = 0; i < c1.shape.size(); i++) {
+				Vector2f a = c1.shape.get(i);
+				Vector2f b = c1.shape.get((i + 1) % c1.shape.size());
 				Vector2f edge = new Vector2f(b.x-a.x, b.y-a.y);
 				
 				Vector2f normal;
@@ -51,7 +50,7 @@ public class CollisionHandler {
 				new Line(a, b).render();
 				
 				float min1 = Float.MAX_VALUE, max1 = Float.MIN_VALUE;
-				for(Vector2f p:c1.poly.shape){ // Farthest points
+				for(Vector2f p:c1.shape){ // Farthest points
 					float q = Vector2f.dot(normal,p);
 					//float q = (p.x * axisProj.x + p.y * axisProj.y); //dotProduct
 					min1 = Math.min(min1, q);
@@ -59,7 +58,7 @@ public class CollisionHandler {
 				}
 				
 				float min2 = Float.MAX_VALUE, max2 = Float.MIN_VALUE;
-				for(Vector2f p:c2.poly.shape){ // Farthest points
+				for(Vector2f p:c2.shape){ // Farthest points
 					float q = Vector2f.dot(normal,p);
 					//float s = (r.x * axisProj.x + r.y * axisProj.y); //dotProduct
 					min2 = Math.min(min2, q);
@@ -72,7 +71,12 @@ public class CollisionHandler {
 				} 
 			}
 		}
-		Vector2f d = new Vector2f(staticE.poly.pos.x - movingE.poly.pos.x, staticE.poly.pos.y - movingE.poly.pos.y); //minimalTranslationVector
+		
+		//Fehler polygon.pos? problem nur bei positiv, nicht bei negagiv
+		//OHNE ABS
+		/*Vector2f centerS = staticE.getCenterPoint();
+		Vector2f centerM = movingE.getCenterPoint();*/
+		Vector2f d = new Vector2f(staticE.pos.x - movingE.pos.x, staticE.pos.y - movingE.pos.y); //minimalTranslationVector
 		//float s = (float) Math.sqrt(d.x*d.x + d.y*d.y);
 		float s = d.length();
 		
@@ -84,28 +88,40 @@ public class CollisionHandler {
 	}
 	
 	public static boolean detectSATCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		Vector2f move1 = doSATCollision(movingE, staticE);
-		Vector2f move2 = doSATCollision(staticE, movingE);
-		if(move1 != null && move2 != null){
-			Vector2f offset = new Vector2f(100, 100);
-			new Line(offset, Vector2f.add(move1, offset, null)).render(1, 0, 0, 1);
-			new Line(offset, Vector2f.add(move2, offset, null)).render(0, 0, 1, 1);
-			return true;
+		if(detectRectCollision(movingE, staticE)){ //rough
+			for(Polygon m:movingE.polygons){
+				for(Polygon s:staticE.polygons){
+					Vector2f move1 = doSATCollision(m, s);
+					Vector2f move2 = doSATCollision(s, m);
+					if(move1 != null && move2 != null){
+						/*Vector2f offset = new Vector2f(100, 100);
+						new Line(offset, Vector2f.add(move1, offset, null)).render(1, 0, 0, 1);
+						new Line(offset, Vector2f.add(move2, offset, null)).render(0, 0, 1, 1);*/
+						return true;
+					}
+				}
+			}
 		}
 		return false;
 	}
 	
 	public static void resolveSATCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		Vector2f move = doSATCollision(movingE, staticE);
-		Vector2f move1 = doSATCollision(staticE, movingE);
-		if(move != null&&move1 != null){
-			if(move1.length()<move.length()){
-				move1 = (Vector2f)move1.scale(-1f);
-				movingE.poly.move(move1);
-				movingE.rect.move(move1);
-			} else {
-				movingE.poly.move(move);
-				movingE.rect.move(move);
+		if(detectRectCollision(movingE, staticE)){ //rough
+			for(Polygon m:movingE.polygons){
+				for(Polygon s:staticE.polygons){
+					//System.out.println(s.shape);
+					//System.out.println(s.pos);
+					Vector2f move = doSATCollision(m, s);
+					Vector2f move1 = doSATCollision(s, m);
+					if(move != null&&move1 != null){
+						if(move1.length()<move.length() && move1.length()>0){
+							//move1 = (Vector2f)move1.scale(-1f);
+							movingE.move(move1);
+						} else {
+							movingE.move(move);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -140,11 +156,9 @@ public class CollisionHandler {
 		Vector2f move = doRectCollision(movingE.rect, staticE.rect);
 		if(move != null){
 			if(move.x>move.y){
-				movingE.poly.move(move.x*Math.signum(movingE.vel.x),0f);
-				movingE.rect.move(move.x*Math.signum(movingE.vel.x),0f);
+				movingE.move(new Vector2f(move.x*Math.signum(movingE.vel.x),0f));
 			} else {
-				movingE.poly.move(0f, move.y*Math.signum(movingE.vel.y));
-				movingE.rect.move(0f, move.y*Math.signum(movingE.vel.y));
+				movingE.move(new Vector2f(0f, move.y*Math.signum(movingE.vel.y)));
 			}
 			if(movingE.vel.y>0) Main.player.grounded = true;
 			Main.player.rect.changeTex(0, 1000,false); // change to landed texture

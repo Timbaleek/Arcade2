@@ -1,8 +1,5 @@
 package entities;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
@@ -48,17 +45,21 @@ public class Polygon {
 		}
 	}
 	
-	public void savePolygon(String path, int polygonNumber){
-		try {
-			Writer wr = new FileWriter(path + polygonNumber +".txt");
-			wr.write(pos.x+","+pos.y+"\n");
-			for(Vector2f p:shape){
-				wr.write((int)p.x+","+(int)p.y+"\n");
+	public Vector2f getCenterPoint(){
+		if(shape.size() != 0){
+			float f = 0, area = 0;
+			Vector2f first = shape.get(0);
+			Vector2f center = new Vector2f(0,0);
+			for (int i = 0, j = shape.size() - 1; i < shape.size(); j = i++) {
+				Vector2f p1 = shape.get(i), p2 = shape.get(j);
+				f = (p1.x - first.x) * (p2.y - first.y) - (p2.x - first.x) * (p1.y - first.y);
+				area += f;
+				center.x += (p1.x + p2.x - 2 * first.x) * f;
+				center.y += (p1.y + p2.y - 2 * first.y) * f;
 			}
-			wr.flush();
-			wr.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			area *= 3;
+			return new Vector2f(center.x / area + first.x,center.y / area + first.y);
 		}
+		return null;
 	}
 }

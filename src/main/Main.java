@@ -1,15 +1,14 @@
 package main;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 
 import entities.Player;
+import entities.Polygon;
 import graphics.GraphicRect;
 import graphics.GraphicRectLoader;
 import util.CollisionHandler;
@@ -54,6 +53,8 @@ public class Main {
 		Display.destroy();
 	}
 
+	public final static Vector2f nullVec = new Vector2f(0,0);
+	
 	public static float transparency = 0.5f;
 	static final int numberOfWorlds = 1;
 	static World currentWorld; 
@@ -69,6 +70,9 @@ public class Main {
 	private static void init() {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
+		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
+				GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"));
+		
 		for(int i = 0; i < backgroundTiles.length; i++){
 			for(int j = 0; j < backgroundTiles[i].length; j++){
 				Texture tex = GraphicRectLoader.initTex("raster");
@@ -77,9 +81,7 @@ public class Main {
 		}
 		
 		currentWorld = WorldLoader.loadWorld(currentWorldNumber);
-		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt"),
-				GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"));
-
+		
 		camera = new Camera(new Vector2f(0,0), 1);
 		onPlayerMove();
 	}
@@ -94,8 +96,8 @@ public class Main {
 	}
 	
 	private static void onPlayerMove() { // to reduce the calculations to only when the player moves
-		camera.pos.x = player.poly.pos.x-(screenWidth/2);
-		camera.pos.y = player.poly.pos.y-(screenHeight/2);
+		camera.pos.x = player.rect.pos.x+(player.rect.size.x/2)-(screenWidth/2);
+		camera.pos.y = player.rect.pos.y+(player.rect.size.y/2)-(screenHeight/2);
 		for(int i = 0; i < backgroundTiles.length; i++){
 			for(int j = 0; j < backgroundTiles[i].length; j++){
 				backgroundTiles[i][j].pos.x = camera.getLeftEdge() - (camera.getLeftEdge()%tileSize) + i*tileSize;
@@ -107,7 +109,7 @@ public class Main {
 	private static void changeWorld(int worldNumber){
 		currentWorldNumber = worldNumber;
 		currentWorld = WorldLoader.loadWorld(currentWorldNumber);
-		//TODO reset player
+		player.respawn(currentWorld.spawnPoint);
 	}
 	
 	private static void render() {
@@ -123,16 +125,13 @@ public class Main {
 		new Line(new Vector2f(0,0), new Vector2f(0,1000)).render();
 		new Line(new Vector2f(0,0), new Vector2f(1000,0)).render();
 		
-		GL11.glPopMatrix();
-		GL11.glPushMatrix();
-		//GLU.gluLookAt(camera.pos.x, camera.pos.y, 0f, player.rect.pos.x, player.rect.pos.y,0f,0f,0f,1f);
-		//Vector2f oldPos = player.rect.pos;
-		//player.rect.pos.x = -player.rect.size.x/2; player.rect.pos.y = -player.rect.size.y/2;
-		//GL11.glRotatef(90f, 0, 0, 1);
-		//splayer.rect.pos=oldPos;
 		player.rect.renderAnim();
-		//player.poly.render();
-		//CollisionHandler.renderNormals(player.poly);
+		//SAT debugging
+		for(Polygon poly:player.polygons){
+			poly.render();
+			CollisionHandler.renderNormals(poly);
+		}
+		//
 		GL11.glPopMatrix();
 	}
 

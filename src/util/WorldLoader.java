@@ -19,10 +19,10 @@ public class WorldLoader {
 		String[] pFiles = new File(dirPath).list();
 		for(String file:pFiles){
 			dirPath = "res/worlds/world" + worldNumber + "/polygons/";
-			Polygon polygon = PolygonLoader.load(dirPath+file);
+			ArrayList<Polygon> polygons = PolygonLoader.load(dirPath+file);
 			dirPath = "res/worlds/world" + worldNumber + "/rects/";
 			GraphicRect rect = GraphicRectLoader.load(dirPath+file);
-			collidingGameEntities.add(new CollidingGameEntity(polygon,rect));
+			collidingGameEntities.add(new CollidingGameEntity(rect,polygons));
 		}
 		return new World(collidingGameEntities);
 	}

@@ -15,7 +15,7 @@ public class GraphicRectLoader {
 	public static Texture initTex(String textureName){
 		Texture tex = null;
 		String path = "res/textures/"+textureName+".png";
-		System.out.println(textureName);
+		//System.out.println(textureName);
 		try {
 			tex = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
 			tex.setTextureFilter(GL11.GL_NEAREST);
