@@ -28,7 +28,7 @@ public class Player extends CollidingGameEntity{
 
 				//System.out.println(grounded);
 				if(grounded){
-					//Main.player.rect.changeTex(1, (long)(jumpForce/(Main.gravity)), false); // change to before jumping texture
+					//Main.player.gRect.changeTex(1, (long)(jumpForce/(Main.gravity)), false); // change to before jumping texture
 					vel.y = -jumpForce;
 					grounded = false;
 				}
@@ -41,10 +41,10 @@ public class Player extends CollidingGameEntity{
 	
 	public void update(){
 		if(vel.y <= 0.01f && vel.y >= -0.01f){
-			//Main.player.rect.changeTex(2, 100, true); // change to falling texture
+			//Main.player.gRect.changeTex(2, 100, true); // change to falling texture
 		}
-		if(Main.player.rect.isDone() == 1){
-			Main.player.rect.changeTex(1, (long)(jumpForce/(Main.gravity)), false); // change to ascending texture
+		if(Main.player.gRect.isDone() == 1){
+			Main.player.gRect.changeTex(1, (long)(jumpForce/(Main.gravity)), false); // change to ascending texture
 		}
 		super.update();
 	}
@@ -52,6 +52,6 @@ public class Player extends CollidingGameEntity{
 	public void respawn(Vector2f spawnpoint) {
 		vel = Main.nullVec;
 		polygons.get(0).pos = spawnpoint;
-		rect.pos = spawnpoint;
+		gRect.pos = spawnpoint;
 	}
 }

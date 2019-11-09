@@ -2,6 +2,7 @@ package graphics;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.lwjgl.opengl.GL11;
@@ -51,5 +52,26 @@ public class GraphicRectLoader {
 			}
 		}
 		return g;
+	}
+	
+	public static ArrayList<Rect> loadColliders(String path) {
+		ArrayList<Rect> rects = new ArrayList<Rect>();
+		
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(new File(path));
+			//read line by line
+			while(scanner.hasNextLine()){
+				//process each line
+				String line = scanner.nextLine();
+				String[]object = line.split(",");
+				rects.add(new Rect(new Vector2f(Float.parseFloat(object[0]),Float.parseFloat(object[1])),
+						  new Vector2f(Float.parseFloat(object[2]),Float.parseFloat(object[3]))));
+			}
+			return rects;
+		} catch (IOException e) {
+			return null;
+		}
+		
 	}
 }

@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 
+import arduinoCom.ArduinoCommunication;
 import entities.Player;
 import entities.Polygon;
 import graphics.GraphicRect;
@@ -15,11 +16,12 @@ import util.CollisionHandler;
 import util.Line;
 import util.PolygonLoader;
 import util.WorldLoader;
+import worlds.World;
 
 public class Main {
 
-	final static int screenWidth = 1920;
-	final static int screenHeight = 1080;
+	public final static int screenWidth = 1920;
+	public final static int screenHeight = 1080;
 
 	public static void main(String[] args) {
 		
@@ -57,7 +59,7 @@ public class Main {
 	
 	public static float transparency = 0.5f;
 	static final int numberOfWorlds = 1;
-	static World currentWorld; 
+	public static World currentWorld; 
 	public static int currentWorldNumber = 1;
 	
 	static final float tileSize = 500;
@@ -69,6 +71,12 @@ public class Main {
 	public static Player player;
 	private static void init() {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		try {
+			ArduinoCommunication.arduinoListen();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
 				GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"));
@@ -96,8 +104,8 @@ public class Main {
 	}
 	
 	private static void onPlayerMove() { // to reduce the calculations to only when the player moves
-		camera.pos.x = player.rect.pos.x+(player.rect.size.x/2)-(screenWidth/2);
-		camera.pos.y = player.rect.pos.y+(player.rect.size.y/2)-(screenHeight/2);
+		camera.pos.x = player.gRect.pos.x+(player.gRect.size.x/2)-(screenWidth/2);
+		camera.pos.y = player.gRect.pos.y+(player.gRect.size.y/2)-(screenHeight/2);
 		for(int i = 0; i < backgroundTiles.length; i++){
 			for(int j = 0; j < backgroundTiles[i].length; j++){
 				backgroundTiles[i][j].pos.x = camera.getLeftEdge() - (camera.getLeftEdge()%tileSize) + i*tileSize;
@@ -106,8 +114,8 @@ public class Main {
 		}
 	}
 
-	private static void changeWorld(int worldNumber){
-		currentWorldNumber = worldNumber;
+	public static void changeWorld(){
+		currentWorldNumber++;
 		currentWorld = WorldLoader.loadWorld(currentWorldNumber);
 		player.respawn(currentWorld.spawnPoint);
 	}
@@ -125,12 +133,12 @@ public class Main {
 		new Line(new Vector2f(0,0), new Vector2f(0,1000)).render();
 		new Line(new Vector2f(0,0), new Vector2f(1000,0)).render();
 		
-		player.rect.renderAnim();
+		player.gRect.renderAnim();
 		//SAT debugging
-		for(Polygon poly:player.polygons){
-			poly.render();
-			CollisionHandler.renderNormals(poly);
-		}
+//		for(Polygon poly:player.polygons){
+//			poly.render();
+//			CollisionHandler.renderNormals(poly);
+//		}
 		//
 		GL11.glPopMatrix();
 	}

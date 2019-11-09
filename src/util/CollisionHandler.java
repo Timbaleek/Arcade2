@@ -126,9 +126,9 @@ public class CollisionHandler {
 		}
 	}
 	
-	public static Vector2f doRectCollision(Rect r1, Rect rect){
+	public static Vector2f doRectCollision(Rect r1, Rect gRect){
 		float r1Left = r1.pos.x, r1Right = r1.pos.x + r1.size.x, r1Top = r1.pos.y, r1Bottom = r1.pos.y + r1.size.y;
-		float r2Left = rect.pos.x, r2Right = rect.pos.x + rect.size.x, r2Top = rect.pos.y, r2Bottom = rect.pos.y + rect.size.y;
+		float r2Left = gRect.pos.x, r2Right = gRect.pos.x + gRect.size.x, r2Top = gRect.pos.y, r2Bottom = gRect.pos.y + gRect.size.y;
 		Vector2f overlap = new Vector2f(0,0);
 		
 		if(r1Left<r2Left){
@@ -148,12 +148,12 @@ public class CollisionHandler {
 	}
 	
 	public static boolean detectRectCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		if(doRectCollision(movingE.rect, staticE.rect)!=null){ return true;}
+		if(doRectCollision(movingE.gRect, staticE.gRect)!=null){ return true;}
 		return false;
 	}
 	
 	public static void resolveRectCollision(CollidingGameEntity movingE, CollidingGameEntity staticE){
-		Vector2f move = doRectCollision(movingE.rect, staticE.rect);
+		Vector2f move = doRectCollision(movingE.gRect, staticE.gRect);
 		if(move != null){
 			if(move.x>move.y){
 				movingE.move(new Vector2f(move.x*Math.signum(movingE.vel.x),0f));
@@ -161,7 +161,7 @@ public class CollisionHandler {
 				movingE.move(new Vector2f(0f, move.y*Math.signum(movingE.vel.y)));
 			}
 			if(movingE.vel.y>0) Main.player.grounded = true;
-			Main.player.rect.changeTex(0, 1000,false); // change to landed texture
+			Main.player.gRect.changeTex(0, 1000,false); // change to landed texture
 		}
 	}
 	

@@ -12,27 +12,42 @@ public class CollidingGameEntity {
 	public Vector2f vel = new Vector2f(0,0);
 	public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
 	public ArrayList<Rect> rects = new ArrayList<Rect>();
-	public GraphicRect rect;
+	public GraphicRect gRect;
 	private final float maxSpeed = 3000;
 	//path
-	public Vector2f[] path = {};
+	public Polygon path = null;
 	public float pathSpeed = 2;
 	int pathIndex = 0;
 	
-	public CollidingGameEntity(GraphicRect rect) {
-		this.rect = rect;
+	public CollidingGameEntity(GraphicRect gRect) {
+		this.gRect = gRect;
 	}
 	
-	public CollidingGameEntity(GraphicRect rect, ArrayList<Polygon> polygons) {
-		this.rect = rect;
+	public void setPolygons(ArrayList<Polygon> polygons) {
 		this.polygons = polygons;
 	}
-	
+
+	public void setRects(ArrayList<Rect> rects) {
+		this.rects = rects;
+	}
+
+	public void setPath(Polygon path) {
+		this.path = path;
+	}
+
 	public void addPolygon(Polygon poly){
 		polygons.add(poly);
 	}
+	
+	Vector2f setVel = new Vector2f(0,0);
+	public void setVel(Vector2f setVel){
+		this.setVel = setVel;
+		vel = setVel;
+	}
 
 	public void update(){
+		if(setVel!=new Vector2f(0,0)) vel = setVel;
+
 		move(vel);
 		
 		if(vel.x > 0.01 || vel.x < -0.01){
@@ -46,7 +61,7 @@ public class CollidingGameEntity {
 	}
 	
 	public void move(Vector2f move){
-		rect.move(move);
+		gRect.move(move);
 		for(Polygon poly:polygons){
 			poly.move(move);
 		}
@@ -54,18 +69,18 @@ public class CollidingGameEntity {
 	
 	//path
 	public void updatePath(){
-		if(moveTowards(path[pathIndex], pathSpeed)){
-			pathIndex = (pathIndex + 1) % path.length;
+		if(moveTowards(path.shape.get(pathIndex), pathSpeed)){
+			pathIndex = (pathIndex + 1) % path.shape.size();
 		}
 	}
 
 	public boolean moveTowards(Vector2f destination, float time){
-		Vector2f rectMiddle = new Vector2f(rect.pos.x+(rect.size.x/2.0f),rect.pos.y+(rect.size.y/2.0f));
-		if(rectMiddle.x<=destination.x+5&&rectMiddle.x>=destination.x-5&&rectMiddle.y<=destination.y+5&&rectMiddle.y>=destination.y-5){
+		Vector2f gRectMiddle = new Vector2f(gRect.pos.x+(gRect.size.x/2.0f),gRect.pos.y+(gRect.size.y/2.0f));
+		if(gRectMiddle.x<=destination.x+5&&gRectMiddle.x>=destination.x-5&&gRectMiddle.y<=destination.y+5&&gRectMiddle.y>=destination.y-5){
 			return true;
 		}
-		Vector2f movement = new Vector2f(destination.x-rectMiddle.x,
-										 destination.y-rectMiddle.y);
+		Vector2f movement = new Vector2f(destination.x-gRectMiddle.x,
+										 destination.y-gRectMiddle.y);
 		double dist = Math.sqrt((movement.x*movement.x) + (movement.y*movement.y));
 		double totalVel = dist/time;
 		vel.x = (float) (movement.x/totalVel);
