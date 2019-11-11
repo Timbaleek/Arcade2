@@ -88,7 +88,7 @@ public class CollisionHandler {
 	}
 	
 	public static boolean detectSATCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		if(detectRectCollision(movingE, staticE)){ //rough
+		if(detectRectCollision(movingE.gRect, staticE.gRect)){ //rough
 			for(Polygon m:movingE.polygons){
 				for(Polygon s:staticE.polygons){
 					Vector2f move1 = doSATCollision(m, s);
@@ -106,7 +106,7 @@ public class CollisionHandler {
 	}
 	
 	public static void resolveSATCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		if(detectRectCollision(movingE, staticE)){ //rough
+		if(detectRectCollision(movingE.gRect, staticE.gRect)){ //rough
 			for(Polygon m:movingE.polygons){
 				for(Polygon s:staticE.polygons){
 					//System.out.println(s.shape);
@@ -147,13 +147,14 @@ public class CollisionHandler {
 		return null;
 	}
 	
-	public static boolean detectRectCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		if(doRectCollision(movingE.gRect, staticE.gRect)!=null){ return true;}
+	public static boolean detectRectCollision(Rect movingE, Rect staticE) {
+		if(doRectCollision(movingE, staticE)!=null){ return true;}
 		return false;
 	}
 	
 	public static void resolveRectCollision(CollidingGameEntity movingE, CollidingGameEntity staticE){
-		Vector2f move = doRectCollision(movingE.gRect, staticE.gRect);
+		for(Rect staticERect:staticE.rects) {
+		Vector2f move = doRectCollision(movingE.rects.get(0), staticERect);
 		if(move != null){
 			if(move.x>move.y){
 				movingE.move(new Vector2f(move.x*Math.signum(movingE.vel.x),0f));
@@ -165,6 +166,7 @@ public class CollisionHandler {
 				movingE.vel.y = 0;
 			}
 			movingE.vel.y = Main.gravity;
+		}
 		}
 	}
 	

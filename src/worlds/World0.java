@@ -9,7 +9,8 @@ import main.Main;
 
 public class World0 extends World{
 
-	private boolean amHügel;
+	public Vector2f spawnPoint = new Vector2f(100,3000);
+	
 
 	public World0(World world) {
 		graphicGameEntities = world.graphicGameEntities;
@@ -19,29 +20,27 @@ public class World0 extends World{
 	}
 	
 	public void update() {
+		if(Main.player.gRect.pos.y > 10000) {
+			Main.player.respawn(spawnPoint);
+		}
 		super.update();
 	}
 	
 	@Override
 	public void trigger(CollidingGameEntity triggered){
-		System.out.println(triggered.gRect.textureName);
+		//System.out.println(triggered.gRect.textureName);
 		switch(triggered.gRect.textureName){
 		case "Papierloch":
 			Main.changeWorld();
 			break;
-		case "hügel":
-			amHügel = true;
+		case "Maulwurfshügel":
 			try {
-				ArduinoCommunication.arduinoSend("2");
+				ArduinoCommunication.arduinoSend("p");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}//activate drahtfolger
-			//sperren
-			if(amHügel == false){
-				Main.player.move(new Vector2f(100,0));
-				Main.player.gRect.changeTex(1, 1, false);
-			}
+			Main.wait = true;
 			break;
 		case "Pflock 1":
 		case "Pflock 2":
@@ -75,8 +74,12 @@ public class World0 extends World{
 				} else { //0
 					Main.player.setVel(new Vector2f(0,0));
 				}
+				break;
 			case 3:
-				amHügel = true;
+				Main.player.move(new Vector2f(1000,0));
+				Main.player.gRect.changeTex(1, 1, false);
+				Main.wait = false;
+				break;
 		}
 	}
 

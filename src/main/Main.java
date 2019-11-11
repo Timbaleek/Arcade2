@@ -19,8 +19,8 @@ import util.WorldLoader;
 import worlds.*;
 public class Main {
 
-	public final static int screenWidth = 1920;
-	public final static int screenHeight = 1080;
+	public final static int screenWidth = 1620;
+	public final static int screenHeight = 1152;
 
 	public static void main(String[] args) {
 		
@@ -63,12 +63,14 @@ public class Main {
 	static final float tileSize = 500;
 	static GraphicRect[][] backgroundTiles = new GraphicRect[(int)Math.ceil(screenWidth/tileSize)+1][(int)Math.ceil(screenHeight/tileSize)+1];
 	
-	public static final float gravity = 0.02f;
+	public static final float gravity = 0.04f;
 	public static final Vector2f spawnPoint = new Vector2f(1000,600);
 	static boolean loading = true;
 	
 	public static Camera camera;
 	public static Player player;
+	public static boolean wait = false;
+	
 	private static void init() {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		try {
@@ -80,6 +82,7 @@ public class Main {
 		
 		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
 				GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"),spawnPoint);
+		player.addRects(GraphicRectLoader.loadColliders("res/worlds/world" + currentWorldNumber + "/playerCol.txt").get(0));
 		
 		for(int i = 0; i < backgroundTiles.length; i++){
 			for(int j = 0; j < backgroundTiles[i].length; j++){
@@ -97,9 +100,9 @@ public class Main {
 	}
 	
 	private static void update() {
-		if(player!=null){
+		if(!wait){
 			player.updateInput();
-			//player.vel.y += gravity;
+			player.vel.y += gravity;
 			player.update();
 			
 			worlds[currentWorldNumber].update();
@@ -116,8 +119,8 @@ public class Main {
 	
 	private static void onPlayerMove() { // to reduce the calculations to only when the player moves
 		camera.pos.x = player.gRect.pos.x+(player.gRect.size.x/2)-(screenWidth/2);
-		if(camera.pos.x < 0) {
-			camera.pos.x = 0;
+		if(camera.pos.x < 100) {
+			camera.pos.x = 100;
 		}
 		camera.pos.y = player.gRect.pos.y+(player.gRect.size.y/2)-(screenHeight/2);
 		if(camera.pos.y < 0) {
@@ -139,7 +142,7 @@ public class Main {
 //			System.out.println("Could not change lager");
 //			e.printStackTrace();
 //		}
-		player = null;
+		wait = true;
 		switch(currentWorldNumber){
 		case 0:
 			worlds[currentWorldNumber] = new World0(WorldLoader.loadWorld(currentWorldNumber));
@@ -163,6 +166,7 @@ public class Main {
 		
 		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
 							GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"),spawnPoint);
+		wait = false;
 	}
 	
 	private static void render() {

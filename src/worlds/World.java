@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import entities.CollidingGameEntity;
 import entities.Polygon;
+import graphics.Rect;
 import main.Main;
 import util.CollisionHandler;
 
@@ -28,7 +29,8 @@ public class World {
 			g.update();
 		}
 		for (CollidingGameEntity c: collidingGameEntities){
-			CollisionHandler.resolveRectCollision(Main.player, c);
+				CollisionHandler.resolveRectCollision(Main.player, c);
+				
 			//CollisionHandler.resolveSATCollision(Main.player, c);
 //			System.out.println((CollisionHandler.detectSATCollision(Main.player, c)));
 		}

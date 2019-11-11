@@ -34,7 +34,7 @@ public class Player extends CollidingGameEntity{
 					vel.y = -jumpForce;
 					grounded = false;
 				}
-				vel.y -= 0.05;
+				//vel.y -= 0.05;
 			}
 			if ((Keyboard.isKeyDown(Keyboard.KEY_S))){
 				vel.y += 0.05;
@@ -52,8 +52,7 @@ public class Player extends CollidingGameEntity{
 	}
 
 	public void respawn(Vector2f spawnpoint) {
-		move(new Vector2f(-1000,0));
-		moveTowards(spawnpoint,0.001f);
+		moveTo(spawnpoint);
 		vel = new Vector2f(0,0);
 	}
 }

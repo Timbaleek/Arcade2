@@ -69,6 +69,9 @@ public class CollidingGameEntity {
 		for(Polygon poly:polygons){
 			poly.move(move);
 		}
+		for(Rect rect:rects) {
+			rect.move(move);
+		}
 	}
 	
 	//path
@@ -94,6 +97,7 @@ public class CollidingGameEntity {
 
 	public boolean moveTo(Vector2f destination){
 		Vector2f movement = new Vector2f(destination.x-gRect.pos.x,destination.y-gRect.pos.y);
+		move(movement);
 		return false;
 	}
 
