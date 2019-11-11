@@ -24,6 +24,7 @@ public class World0 extends World{
 	
 	@Override
 	public void trigger(CollidingGameEntity triggered){
+		System.out.println(triggered.gRect.textureName);
 		switch(triggered.gRect.textureName){
 		case "Papierloch":
 			Main.changeWorld();

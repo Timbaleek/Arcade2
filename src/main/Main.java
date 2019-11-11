@@ -88,7 +88,7 @@ public class Main {
 			}
 		}
 		
-		worlds[currentWorldNumber] = new World1(WorldLoader.loadWorld(currentWorldNumber));
+		worlds[currentWorldNumber] = new World0(WorldLoader.loadWorld(currentWorldNumber));
 		
 		camera = new Camera(new Vector2f(player.gRect.pos.x+(player.gRect.size.x/2)-(screenWidth/2),player.gRect.pos.y+(player.gRect.size.y/2)-(screenHeight/2)), 1);
 		onPlayerMove();

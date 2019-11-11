@@ -16,7 +16,7 @@ public class World {
 	public List<CollidingGameEntity> pathingGameEntities = new ArrayList<CollidingGameEntity>();
 	public List<CollidingGameEntity> triggerGameEntities = new ArrayList<CollidingGameEntity>();
 	
-	public Vector2f spawnPoint = new Vector2f((Main.screenWidth/2)+200, 300);
+	public Vector2f spawnPoint = new Vector2f(0,0);
 	
 	public World(){
 	}

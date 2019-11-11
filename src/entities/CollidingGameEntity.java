@@ -92,6 +92,9 @@ public class CollidingGameEntity {
 		return false;
 	}
 
-
+	public boolean moveTo(Vector2f destination){
+		Vector2f movement = new Vector2f(destination.x-gRect.pos.x,destination.y-gRect.pos.y);
+		return false;
+	}
 
 }

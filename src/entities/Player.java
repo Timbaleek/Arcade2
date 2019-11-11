@@ -52,6 +52,7 @@ public class Player extends CollidingGameEntity{
 	}
 
 	public void respawn(Vector2f spawnpoint) {
+		move(new Vector2f(-1000,0));
 		moveTowards(spawnpoint,0.001f);
 		vel = new Vector2f(0,0);
 	}
