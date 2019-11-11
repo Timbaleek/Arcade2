@@ -149,9 +149,11 @@ public class Main {
 			worlds[currentWorldNumber] = new World5(WorldLoader.loadWorld(currentWorldNumber));
 		}
 		
-		
+		GraphicRect elephant = new GraphicRect(new Vector2f(Main.screenWidth/2+300,Main.screenHeight/2+300), new Vector2f(600,600), "elephant");
 		//TODO
-		//while(loading){}; //do nothing while loading
+		while(loading){
+			elephant.render();
+		}; //do nothing while loading
 		
 		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
 							GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"),spawnPoint);
