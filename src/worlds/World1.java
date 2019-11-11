@@ -5,28 +5,41 @@ import org.lwjgl.util.vector.Vector2f;
 
 import arduinoCom.ArduinoCommunication;
 import entities.CollidingGameEntity;
+import graphics.GraphicRect;
+import graphics.GraphicRectLoader;
 import main.Main;
 
 public class World1 extends World{
 
+	GraphicRect mask;
 	public World1(World world) {
 		graphicGameEntities = world.graphicGameEntities;
 		collidingGameEntities = world.collidingGameEntities;
 		pathingGameEntities = world.pathingGameEntities;
 		triggerGameEntities = world.triggerGameEntities;
+		mask = new GraphicRect(Main.player.gRect.pos, new Vector2f(1080,1080), "Höhle Maske");
 	}
 	
 	@Override
 	public void update(){
 		super.update();
+		mask.pos.x = Main.player.gRect.pos.x - Main.player.gRect.size.x + (mask.size.x/2);
+		mask.pos.y = Main.player.gRect.pos.y - Main.player.gRect.size.y + (mask.size.y/2);
+	}
+	
+	public void render() {
+		super.render();
+		mask.render();
 	}
 	
 	@Override
 	public void trigger(CollidingGameEntity triggered){
 		System.out.println(triggered.gRect.textureName);
 		switch(triggered.gRect.textureName){
-		case "Einsiedlerkrebs":
+		case "Papierloch":
 			Main.changeWorld();
+		case "Pilz":
+			Main.player.vel.y *= 1;
 		}
 	}
 	

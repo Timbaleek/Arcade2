@@ -58,7 +58,7 @@ public class Main {
 	
 	public static float transparency = 0.5f;
 	static final int numberOfWorlds = 6;
-	public static int currentWorldNumber = 0;
+	public static int currentWorldNumber = 1;
 	public static World[] worlds = new World[numberOfWorlds];
 	static final float tileSize = 500;
 	static GraphicRect[][] backgroundTiles = new GraphicRect[(int)Math.ceil(screenWidth/tileSize)+1][(int)Math.ceil(screenHeight/tileSize)+1];
