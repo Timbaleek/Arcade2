@@ -88,7 +88,7 @@ public class CollisionHandler {
 	}
 	
 	public static boolean detectSATCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		//if(detectRectCollision(movingE, staticE)){ //rough
+		if(detectRectCollision(movingE, staticE)){ //rough
 			for(Polygon m:movingE.polygons){
 				for(Polygon s:staticE.polygons){
 					Vector2f move1 = doSATCollision(m, s);
@@ -101,7 +101,7 @@ public class CollisionHandler {
 					}
 				}
 			}
-		//}
+		}
 		return false;
 	}
 	

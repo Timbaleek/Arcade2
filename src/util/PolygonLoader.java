@@ -38,12 +38,12 @@ public class PolygonLoader {
 						System.out.println("Wrong Polygon");
 					}
 				}
-				if(points.size()>0){
+				if(points.size()>1){
 					polygons.add(new Polygon(pos, points));
 				}
 			}
 			
-			if(polygons.size()>0){
+			if(polygons.size()>1){
 				return polygons;
 			}
 		} catch (IOException e) {

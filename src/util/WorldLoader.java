@@ -30,12 +30,12 @@ public class WorldLoader {
 				c.setPolygons(polygons);
 				world.triggerGameEntities.add(c);
 			}
-			ArrayList<Polygon> paths = PolygonLoader.load(worldPath+"/paths/"+file);
+			ArrayList<Polygon> paths = PolygonLoader.load(worldPath+"/path/"+file);
 			if(paths!=null){
 				c.setPath(paths.get(0));
 				world.pathingGameEntities.add(c);
 			}
-			ArrayList<Rect> colliders = GraphicRectLoader.loadColliders(worldPath+"/colliders/"+file);
+			ArrayList<Rect> colliders = GraphicRectLoader.loadColliders(worldPath+"/col/"+file);
 			if(colliders!=null){
 				c.setRects(colliders);
 				world.collidingGameEntities.add(c);

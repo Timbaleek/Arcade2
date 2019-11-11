@@ -18,15 +18,16 @@ public class World0 extends World{
 		triggerGameEntities = world.triggerGameEntities;
 	}
 	
-	public void update(){
+	public void update() {
 		super.update();
 	}
 	
 	@Override
 	public void trigger(CollidingGameEntity triggered){
 		switch(triggered.gRect.textureName){
-		case "noTex":
+		case "Papierloch":
 			Main.changeWorld();
+			break;
 		case "hügel":
 			amHügel = true;
 			try {
@@ -40,9 +41,16 @@ public class World0 extends World{
 				Main.player.move(new Vector2f(100,0));
 				Main.player.gRect.changeTex(1, 1, false);
 			}
-			
+			break;
+		case "Pflock 1":
+		case "Pflock 2":
+		case "Pflock 3":
+		case "Pflock 4":
+		case "Pflock 5":
+			Main.player.respawn(spawnPoint);
+			break;
 		}
-		Main.player.respawn(spawnPoint);
+
 	}
 	
 	@Override
