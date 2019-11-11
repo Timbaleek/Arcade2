@@ -2,6 +2,8 @@ package arduinoCom;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+
 import gnu.io.CommPortIdentifier; 
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
@@ -17,11 +19,11 @@ public class ArduinoCommunication implements SerialPortEventListener {
 	SerialPort serialPort;
 	public static String currentInput = "000";
 	/** The port we're normally going to use. */
-	private static final String portName = "COM4";
+	private static final String portName = "COM5";
 	/**
 	private BufferedReader input;
 	/** The output stream to the port */
-	private OutputStream output;
+	private static OutputStream output;
 	private BufferedReader input;
 	/** Milliseconds to block while waiting for port open */
 	private static final int TIME_OUT = 2000;
@@ -87,8 +89,8 @@ public class ArduinoCommunication implements SerialPortEventListener {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine=input.readLine();
-				Main.currentWorld.updateInput(inputLine);
 				System.out.println(inputLine);
+				Main.updateArduinoInput(inputLine);
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
@@ -96,6 +98,11 @@ public class ArduinoCommunication implements SerialPortEventListener {
 		// Ignore all the other eventTypes, but you should consider the other ones.
 	}
 
+	public static void arduinoSend(String msg) throws Exception {
+		PrintWriter p = new PrintWriter(output);
+		p.flush();
+	}
+	
 	public static void arduinoListen() throws Exception {
 		ArduinoCommunication main = new ArduinoCommunication();
 		main.initialize();

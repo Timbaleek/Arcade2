@@ -16,8 +16,7 @@ import util.CollisionHandler;
 import util.Line;
 import util.PolygonLoader;
 import util.WorldLoader;
-import worlds.World;
-
+import worlds.*;
 public class Main {
 
 	public final static int screenWidth = 1920;
@@ -58,16 +57,17 @@ public class Main {
 	public final static Vector2f nullVec = new Vector2f(0,0);
 	
 	public static float transparency = 0.5f;
-	static final int numberOfWorlds = 1;
-	public static World currentWorld; 
+	static final int numberOfWorlds = 6;
 	public static int currentWorldNumber = 1;
-	
+	public static World[] worlds = new World[numberOfWorlds];
 	static final float tileSize = 500;
 	static GraphicRect[][] backgroundTiles = new GraphicRect[(int)Math.ceil(screenWidth/tileSize)+1][(int)Math.ceil(screenHeight/tileSize)+1];
 	
 	public static final float gravity = 0.02f;
+	public static final Vector2f spawnPoint = new Vector2f(1000,600);
+	static boolean loading = true;
 	
-	static Camera camera;
+	public static Camera camera;
 	public static Player player;
 	private static void init() {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -79,28 +79,39 @@ public class Main {
 		}
 		
 		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
-				GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"));
+				GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"),spawnPoint);
 		
 		for(int i = 0; i < backgroundTiles.length; i++){
 			for(int j = 0; j < backgroundTiles[i].length; j++){
 				Texture tex = GraphicRectLoader.initTex("raster");
-				backgroundTiles[i][j] = new GraphicRect(new Vector2f(i*tileSize,j*tileSize), new Vector2f(tileSize,tileSize), tex);
+				backgroundTiles[i][j] = new GraphicRect(new Vector2f(i*tileSize,j*tileSize), new Vector2f(tileSize,tileSize), tex, "bg");
 			}
 		}
 		
-		currentWorld = WorldLoader.loadWorld(currentWorldNumber);
+		worlds[currentWorldNumber] = new World1(WorldLoader.loadWorld(currentWorldNumber));
 		
-		camera = new Camera(new Vector2f(0,0), 1);
+		camera = new Camera(new Vector2f(player.gRect.pos.x+(player.gRect.size.x/2)-(screenWidth/2),player.gRect.pos.y+(player.gRect.size.y/2)-(screenHeight/2)), 1);
 		onPlayerMove();
+		
+		loading = false;
 	}
 	
 	private static void update() {
-		player.updateInput();
-		//player.vel.y += gravity;
-		player.update();
-		currentWorld.update();
-		if(!(player.vel.x == 0 && player.vel.y == 0)) onPlayerMove();
-		//changeWorld(1);
+		if(player!=null){
+			player.updateInput();
+			//player.vel.y += gravity;
+			player.update();
+			
+			worlds[currentWorldNumber].update();
+			if(!(player.vel.x == 0 && player.vel.y == 0)) onPlayerMove();
+		}
+	}
+	
+	public static void updateArduinoInput(String inputLine) {
+		if(inputLine.charAt(0) == '.'){
+			loading = false;
+		}
+		worlds[currentWorldNumber].updateInput(inputLine);
 	}
 	
 	private static void onPlayerMove() { // to reduce the calculations to only when the player moves
@@ -116,31 +127,61 @@ public class Main {
 
 	public static void changeWorld(){
 		currentWorldNumber++;
-		currentWorld = WorldLoader.loadWorld(currentWorldNumber);
-		player.respawn(currentWorld.spawnPoint);
+//		try {
+//			ArduinoCommunication.arduinoSend("n");
+//		} catch (Exception e) {
+//			System.out.println("Could not change lager");
+//			e.printStackTrace();
+//		}
+		player = null;
+		switch(currentWorldNumber){
+		case 0:
+			worlds[currentWorldNumber] = new World0(WorldLoader.loadWorld(currentWorldNumber));
+		case 1:
+			worlds[currentWorldNumber] = new World1(WorldLoader.loadWorld(currentWorldNumber));
+		case 2:
+			worlds[currentWorldNumber] = new World2(WorldLoader.loadWorld(currentWorldNumber));
+		case 3:
+			worlds[currentWorldNumber] = new World3(WorldLoader.loadWorld(currentWorldNumber));
+		case 4:
+			worlds[currentWorldNumber] = new World4(WorldLoader.loadWorld(currentWorldNumber));
+		case 5:
+			worlds[currentWorldNumber] = new World5(WorldLoader.loadWorld(currentWorldNumber));
+		}
+		
+		
+		//TODO
+		//while(loading){}; //do nothing while loading
+		
+		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
+							GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"),spawnPoint);
 	}
 	
 	private static void render() {
-		GL11.glPushMatrix();
-		GL11.glTranslatef(-camera.pos.x, -camera.pos.y, 0);
-		for(int i = 0; i < backgroundTiles.length; i++){
-			for(int j = 0; j < backgroundTiles[i].length; j++){
-				backgroundTiles[i][j].render();
+		if(player != null){
+			GL11.glPushMatrix();
+			GL11.glTranslatef(-camera.pos.x, -camera.pos.y, 0);
+			
+			for(int i = 0; i < backgroundTiles.length; i++){
+				for(int j = 0; j < backgroundTiles[i].length; j++){
+					backgroundTiles[i][j].render();
+				}
 			}
+			worlds[currentWorldNumber].render();
+			
+			new Line(new Vector2f(0,0), new Vector2f(0,1000)).render();
+			new Line(new Vector2f(0,0), new Vector2f(1000,0)).render();
+			
+			player.gRect.renderAnim();
+			for(Polygon poly:player.polygons){
+				poly.render();
+				CollisionHandler.renderNormals(poly);
+			}
+			//
+			GL11.glPopMatrix();
+			//SAT debugging
+
 		}
-		currentWorld.render();
-		
-		new Line(new Vector2f(0,0), new Vector2f(0,1000)).render();
-		new Line(new Vector2f(0,0), new Vector2f(1000,0)).render();
-		
-		player.gRect.renderAnim();
-		//SAT debugging
-//		for(Polygon poly:player.polygons){
-//			poly.render();
-//			CollisionHandler.renderNormals(poly);
-//		}
-		//
-		GL11.glPopMatrix();
 	}
 
 	public static long getMillis() {

@@ -7,9 +7,9 @@ import arduinoCom.ArduinoCommunication;
 import entities.CollidingGameEntity;
 import main.Main;
 
-public class World1 extends World{
+public class World2 extends World{
 
-	public World1(World world) {
+	public World2(World world) {
 		graphicGameEntities = world.graphicGameEntities;
 		collidingGameEntities = world.collidingGameEntities;
 		pathingGameEntities = world.pathingGameEntities;

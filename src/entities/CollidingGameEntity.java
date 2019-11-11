@@ -39,6 +39,10 @@ public class CollidingGameEntity {
 		polygons.add(poly);
 	}
 	
+	public void addRects(Rect rect) {
+		rects.add(rect);
+	}
+	
 	Vector2f setVel = new Vector2f(0,0);
 	public void setVel(Vector2f setVel){
 		this.setVel = setVel;

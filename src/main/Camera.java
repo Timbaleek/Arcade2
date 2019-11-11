@@ -7,7 +7,7 @@ public class Camera {
 	
 	public static Camera single;
 	
-	Vector2f pos;
+	public Vector2f pos;
 	float zoom;
 	int halfScreenWidth = Main.screenWidth/2;
 	int halfScreenHeight = Main.screenHeight/2;

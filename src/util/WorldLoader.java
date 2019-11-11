@@ -24,9 +24,6 @@ public class WorldLoader {
 		for(String file:pFiles){
 			GraphicRect gRect = GraphicRectLoader.load(worldPath + "/rects/" +file);
 			CollidingGameEntity c = new CollidingGameEntity(gRect);
-			if(file=="end.txt"){
-				world.end = c;
-			}
 			world.graphicGameEntities.add(c);
 			ArrayList<Polygon> polygons = PolygonLoader.load(worldPath+ "/polygons/"+file);
 			if(polygons!=null){

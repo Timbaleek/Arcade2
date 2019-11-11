@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 
 import entities.CollidingGameEntity;
+import entities.Polygon;
 import main.Main;
 import util.CollisionHandler;
 
@@ -14,9 +15,8 @@ public class World {
 	public List<CollidingGameEntity> collidingGameEntities = new ArrayList<CollidingGameEntity>();
 	public List<CollidingGameEntity> pathingGameEntities = new ArrayList<CollidingGameEntity>();
 	public List<CollidingGameEntity> triggerGameEntities = new ArrayList<CollidingGameEntity>();
-	public CollidingGameEntity end = null;
 	
-	public Vector2f spawnPoint = new Vector2f((Main.screenWidth/2)+(Main.player.gRect.size.x/2), 300);
+	public Vector2f spawnPoint = new Vector2f((Main.screenWidth/2)+200, 300);
 	
 	public World(){
 	}
@@ -34,28 +34,27 @@ public class World {
 		}
 		
 		for (CollidingGameEntity p:pathingGameEntities){
+			p.moveTowards(p.path.shape.get(0), 0.001f);
 			p.updatePath();
 		}
 		
 		for (CollidingGameEntity k:triggerGameEntities){
+			//CollisionHandler.resolveSATCollision(Main.player, k);
 			if(CollisionHandler.detectSATCollision(Main.player, k)){
-				Main.player.respawn(spawnPoint);
+				trigger(k);
 			}
 		}
 		
-		if(CollisionHandler.detectSATCollision(Main.player, triggerGameEntities.get(triggerGameEntities.size()-1))){
-			Main.changeWorld();
-		}
 	}
 	
 	public void render(){
 		for (CollidingGameEntity c:graphicGameEntities){
 			c.gRect.renderAnim();
 			//SAT DEBUGGING
-//			for(Polygon p:c.polygons){
-//				p.render();
-//				CollisionHandler.renderNormals(p);
-//			}
+			for(Polygon p:c.polygons){
+				p.render();
+				CollisionHandler.renderNormals(p);
+			}
 		}
 	}
 
@@ -67,5 +66,8 @@ public class World {
 	}
 	
 	public void updateInput(String inputLine) {
+	}
+	
+	public void trigger(CollidingGameEntity triggered){
 	}
 }

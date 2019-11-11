@@ -12,6 +12,7 @@ public class GraphicRect extends Rect{
 	private Texture tex;
 	private ArrayList<Texture> textures = new ArrayList<Texture>();;
 	private int texIndex;
+	public String textureName;
 	
 	private long lastTime = 0;
 	private long millisPerState;
@@ -20,11 +21,12 @@ public class GraphicRect extends Rect{
     private ArrayList<Integer> stateCounts = new ArrayList<Integer>();
     private boolean looping = false;
 	
-	public GraphicRect(Vector2f pos, Vector2f size, Texture tex) { //reduces loading if the same texture is used for multiple objects
+	public GraphicRect(Vector2f pos, Vector2f size, Texture tex, String textureName) { //reduces loading if the same texture is used for multiple objects
 		super(pos,size);
 		this.tex = tex;
+		this.textureName = textureName;
 	}
-    
+
 	public GraphicRect(Vector2f pos, Vector2f size, String textureName) { // NOT USED - for non-changing textures 
 		super(pos,size);
 		tex = GraphicRectLoader.initTex(textureName);
@@ -36,10 +38,12 @@ public class GraphicRect extends Rect{
 		tex = GraphicRectLoader.initTex(textureName);
 		this.stateCount = stateCount;
 		stateCounts.add(stateCount);
+		this.textureName = textureName;
 		textures.add(GraphicRectLoader.initTex(textureName));
 	}
 	
 	public void addTexture(String textureName, int stateCount) {
+		this.textureName = textureName;
 		stateCounts.add(stateCount);
 		textures.add(GraphicRectLoader.initTex(textureName));
 	}

@@ -11,10 +11,12 @@ public class Player extends CollidingGameEntity{
 	public boolean grounded = true;
 	public float jumpForce = 5f;
 
-	public Player(Polygon polygon,GraphicRect graphicRect) {
+	public Player(Polygon polygon,GraphicRect graphicRect, Vector2f spawnpoint) {
 		super(graphicRect);
 		//player only one polygon
+		vel = Main.nullVec;
 		polygons.add(polygon);
+		moveTowards(spawnpoint,0.001f);
 	}
 
 	public void updateInput(){
@@ -50,8 +52,6 @@ public class Player extends CollidingGameEntity{
 	}
 
 	public void respawn(Vector2f spawnpoint) {
-		vel = Main.nullVec;
-		polygons.get(0).pos = spawnpoint;
-		gRect.pos = spawnpoint;
+
 	}
 }

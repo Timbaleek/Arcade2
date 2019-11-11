@@ -88,7 +88,7 @@ public class CollisionHandler {
 	}
 	
 	public static boolean detectSATCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		if(detectRectCollision(movingE, staticE)){ //rough
+		//if(detectRectCollision(movingE, staticE)){ //rough
 			for(Polygon m:movingE.polygons){
 				for(Polygon s:staticE.polygons){
 					Vector2f move1 = doSATCollision(m, s);
@@ -101,7 +101,7 @@ public class CollisionHandler {
 					}
 				}
 			}
-		}
+		//}
 		return false;
 	}
 	
@@ -160,8 +160,11 @@ public class CollisionHandler {
 			} else {
 				movingE.move(new Vector2f(0f, move.y*Math.signum(movingE.vel.y)));
 			}
-			if(movingE.vel.y>0) Main.player.grounded = true;
-			Main.player.gRect.changeTex(0, 1000,false); // change to landed texture
+			if(movingE.vel.y>0){ 
+				Main.player.grounded = true;
+				movingE.vel.y = 0;
+			}
+			movingE.vel.y = Main.gravity;
 		}
 	}
 	
