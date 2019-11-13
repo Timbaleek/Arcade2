@@ -58,12 +58,12 @@ public class Main {
 	
 	public static float transparency = 0.5f;
 	static final int numberOfWorlds = 6;
-	public static int currentWorldNumber = 1;
+	public static int currentWorldNumber = 0;
 	public static World[] worlds = new World[numberOfWorlds];
 	static final float tileSize = 500;
 	static GraphicRect[][] backgroundTiles = new GraphicRect[(int)Math.ceil(screenWidth/tileSize)+1][(int)Math.ceil(screenHeight/tileSize)+1];
 	
-	public static final float gravity = 0.04f;
+	public static final float gravity = 0.1f;
 	public static final Vector2f spawnPoint = new Vector2f(1000,600);
 	static boolean loading = true;
 	
@@ -185,10 +185,10 @@ public class Main {
 			new Line(new Vector2f(0,0), new Vector2f(1000,0)).render();
 			
 			player.gRect.renderAnim();
-			for(Polygon poly:player.polygons){
-				poly.render();
-				CollisionHandler.renderNormals(poly);
-			}
+			//for(Polygon poly:player.polygons){
+				//poly.render();
+				//CollisionHandler.renderNormals(poly);
+			//}
 			//
 			GL11.glPopMatrix();
 			//SAT debugging

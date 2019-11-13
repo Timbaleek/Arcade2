@@ -60,8 +60,10 @@ public class World0 extends World{
 			case 1:
 				if(inputs[1] == -1){
 					Main.player.setVel(new Vector2f(-10,0));
+					Main.player.gRect.changeTex(0, 10, true);
 				} else if(inputs[1] == 1){
 					Main.player.setVel(new Vector2f(10,0));
+					Main.player.gRect.changeTex(0, 1200, true);
 				} else { //0
 					Main.player.setVel(new Vector2f(0,0));
 				}

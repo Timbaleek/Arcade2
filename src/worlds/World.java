@@ -53,10 +53,10 @@ public class World {
 		for (CollidingGameEntity c:graphicGameEntities){
 			c.gRect.renderAnim();
 			//SAT DEBUGGING
-			for(Polygon p:c.polygons){
-				p.render();
-				CollisionHandler.renderNormals(p);
-			}
+//			for(Polygon p:c.polygons){
+//				p.render();
+//				CollisionHandler.renderNormals(p);
+//			}
 		}
 	}
 
