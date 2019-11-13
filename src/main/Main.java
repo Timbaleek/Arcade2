@@ -80,10 +80,6 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
-				GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"),spawnPoint);
-		player.addRects(GraphicRectLoader.loadColliders("res/worlds/world" + currentWorldNumber + "/playerCol.txt").get(0));
-		
 		for(int i = 0; i < backgroundTiles.length; i++){
 			for(int j = 0; j < backgroundTiles[i].length; j++){
 				Texture tex = GraphicRectLoader.initTex("raster");

@@ -5,7 +5,10 @@ import org.lwjgl.util.vector.Vector2f;
 
 import arduinoCom.ArduinoCommunication;
 import entities.CollidingGameEntity;
+import entities.Player;
+import graphics.GraphicRectLoader;
 import main.Main;
+import util.PolygonLoader;
 
 public class World0 extends World{
 
@@ -17,6 +20,10 @@ public class World0 extends World{
 		collidingGameEntities = world.collidingGameEntities;
 		pathingGameEntities = world.pathingGameEntities;
 		triggerGameEntities = world.triggerGameEntities;
+		
+		Main.player = new Player(PolygonLoader.load("res/worlds/world0/playerPoly.txt").get(0),
+				GraphicRectLoader.load("res/worlds/world0/playerRect.txt"),spawnPoint);
+		Main.player.addRects(GraphicRectLoader.loadColliders("res/worlds/world0/playerCol.txt").get(0));
 	}
 	
 	public void update() {
