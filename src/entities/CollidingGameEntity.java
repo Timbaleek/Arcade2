@@ -13,7 +13,7 @@ public class CollidingGameEntity {
 	public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
 	public ArrayList<Rect> rects = new ArrayList<Rect>();
 	public GraphicRect gRect;
-	private final float maxSpeed = 3000;
+	private final float maxSpeed = 300;
 	//path
 	public Polygon path = null;
 	public float pathSpeed = 2;
@@ -55,7 +55,7 @@ public class CollidingGameEntity {
 		move(vel);
 		
 		if(vel.x > 0.01 || vel.x < -0.01){
-			vel.x /= 1.02f;
+			vel.x /= 1.04f;
 		}else{
 			vel.x = 0;
 		}

@@ -43,7 +43,7 @@ public class Player extends CollidingGameEntity{
 	
 	public void update(){
 		if(vel.y <= 0.01f && vel.y >= -0.01f){
-			//Main.player.gRect.changeTex(2, 100, true); // change to falling texture
+			Main.player.gRect.changeTex(2, 100, true); // change to falling texture
 		}
 		if(Main.player.gRect.isDone() == 1){
 			Main.player.gRect.changeTex(1, (long)(jumpForce/(Main.gravity)), false); // change to ascending texture

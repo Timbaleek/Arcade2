@@ -58,7 +58,7 @@ public class Main {
 	
 	public static float transparency = 0.5f;
 	static final int numberOfWorlds = 6;
-	public static int currentWorldNumber = 1;
+	public static int currentWorldNumber = 0;
 	public static World[] worlds = new World[numberOfWorlds];
 	static final float tileSize = 500;
 	static GraphicRect[][] backgroundTiles = new GraphicRect[(int)Math.ceil(screenWidth/tileSize)+1][(int)Math.ceil(screenHeight/tileSize)+1];
@@ -79,10 +79,6 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		player = new Player(PolygonLoader.load("res/worlds/world" + currentWorldNumber + "/playerPoly.txt").get(0),
-				GraphicRectLoader.load("res/worlds/world" + currentWorldNumber + "/playerRect.txt"),spawnPoint);
-		player.addRects(GraphicRectLoader.loadColliders("res/worlds/world" + currentWorldNumber + "/playerCol.txt").get(0));
 		
 		for(int i = 0; i < backgroundTiles.length; i++){
 			for(int j = 0; j < backgroundTiles[i].length; j++){
