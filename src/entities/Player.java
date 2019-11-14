@@ -16,23 +16,21 @@ public class Player extends CollidingGameEntity{
 		//player only one polygon
 		vel = Main.nullVec;
 		polygons.add(polygon);
-
+		moveTo(spawnpoint);
 	}
 
+	boolean rolling;
 	public void updateInput(){
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-				if (Keyboard.getEventKeyState()) {
-				vel.x -= 5;
-				gRect.changeTex(0, 700, true);
+		if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
+				vel.x -= 0.05;
 			}
-			if (Keyboard.getEventKey() == Keyboard.KEY_D) {
-				if (Keyboard.getEventKeyState()) {
-				vel.x += 5;
-				gRect.changeTex(0, 700, true);}
-				
-			}
-			}
+		if(Keyboard.isKeyDown(Keyboard.KEY_D)) {
+				vel.x += 0.05;
+				if(!rolling) {
+					gRect.changeTex(0, 700, true);
+				}rolling = true;
+		} else {
+			rolling = false;
 		}
 		
 		
@@ -40,11 +38,12 @@ public class Player extends CollidingGameEntity{
 
 				//System.out.println(grounded);
 				if(grounded){
-					//Main.player.gRect.changeTex(1, (long)(jumpForce/(Main.gravity)), false); // change to before jumping texture
+					//(long)(jumpForce/(Main.gravity))*2
+					//Main.player.gRect.changeTex(1, 400, false); // change to before jumping texture
 					vel.y = -jumpForce;
 					grounded = false;
 				}
-				vel.y -= 0.05;
+				//vel.y -= 0.05;
 			}
 			if ((Keyboard.isKeyDown(Keyboard.KEY_S))){
 				vel.y += 0.05;
@@ -57,7 +56,9 @@ public class Player extends CollidingGameEntity{
 		}
 
 		if(Main.player.gRect.isDone() == 0){
-			gRect.changeTex(1, 1000, true); // change to ascending texture
+			if(rolling) {
+				gRect.changeTex(0, 1000, false); // change to ascending texture
+			}
 		}
 		super.update();
 	}
