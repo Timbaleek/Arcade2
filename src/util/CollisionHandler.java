@@ -106,7 +106,7 @@ public class CollisionHandler {
 	}
 	
 	public static void resolveSATCollision(CollidingGameEntity movingE, CollidingGameEntity staticE) {
-		if(detectRectCollision(movingE.gRect, staticE.gRect)){ //rough
+		//if(detectRectCollision(movingE.gRect, staticE.gRect)){ //rough
 			for(Polygon m:movingE.polygons){
 				for(Polygon s:staticE.polygons){
 					//System.out.println(s.shape);
@@ -123,7 +123,7 @@ public class CollisionHandler {
 					}
 				}
 			}
-		}
+		//}
 	}
 	
 	public static Vector2f doRectCollision(Rect r1, Rect gRect){

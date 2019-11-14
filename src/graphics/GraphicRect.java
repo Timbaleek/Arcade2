@@ -64,10 +64,9 @@ public class GraphicRect extends Rect{
 	}
 	
 	public void renderAnim(){
-		//updateState();
+		updateState();
 		float x1 = (float)state/stateCount;
 		float x2 = ((float)state+1f)/stateCount;
-		System.out.println(x1);
 		GL11.glColor3f(255, 255, 255);
 		tex.bind();
 		GL11.glBegin(GL11.GL_QUADS);
@@ -101,6 +100,7 @@ public class GraphicRect extends Rect{
 	public void changeTex(int texIndex, long animDuration, boolean looping){
 		this.texIndex = texIndex;
 		tex = textures.get(texIndex);
+		System.out.println(texIndex);
 		state = 0;
 		lastTime = Main.getMillis();
 		this.millisPerState = animDuration/stateCounts.get(texIndex);

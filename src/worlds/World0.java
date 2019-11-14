@@ -12,7 +12,7 @@ import util.PolygonLoader;
 
 public class World0 extends World{
 
-	public Vector2f spawnPoint = new Vector2f(100,3000);
+	public Vector2f spawnPoint = new Vector2f(1000,100);
 	
 
 	public World0(World world) {
@@ -35,19 +35,23 @@ public class World0 extends World{
 	
 	@Override
 	public void trigger(CollidingGameEntity triggered){
-		//System.out.println(triggered.gRect.textureName);
+		System.out.println(triggered.gRect.textureName);
 		switch(triggered.gRect.textureName){
 		case "Papierloch":
 			Main.changeWorld();
 			break;
 		case "Maulwurfshügel":
-			try {
-				ArduinoCommunication.arduinoSend("p");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}//activate drahtfolger
-			Main.wait = true;
+			System.out.println("c");
+			Main.player.move(new Vector2f(1000,0));
+			//Main.player.gRect.changeTex(1, 1, false);
+//			try {
+//				ArduinoCommunication.arduinoSend("p");
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}//activate drahtfolger
+//			Main.wait = true;
+			
 			break;
 		case "Pflock 1":
 		case "Pflock 2":
